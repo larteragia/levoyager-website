@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -71,7 +72,9 @@ export default function RootLayout({
         <meta name="theme-color" content={process.env.NEXT_PUBLIC_APP_THEME_COLOR || '#F1F5F9'} />
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'} />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

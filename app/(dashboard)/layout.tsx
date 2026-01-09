@@ -15,31 +15,35 @@ import {
   Heart,
   User,
   ChevronDown,
+  Home,
 } from 'lucide-react';
+import { AuthGuard } from '../components/AuthGuard';
+import { useAuth, useUser } from '../hooks';
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-  { name: 'Alertas', href: '/dashboard/alerts', icon: Bell },
-  { name: 'Favoritos', href: '/dashboard/favorites', icon: Heart },
-  { name: 'Histórico', href: '/dashboard/history', icon: History },
-  { name: 'Preferências', href: '/dashboard/preferences', icon: Settings },
-  { name: 'Estatísticas', href: '/dashboard/statistics', icon: BarChart3 },
+  { name: 'Dashboard', href: '/', icon: Home },
+  { name: 'Alertas', href: '/alerts', icon: Bell },
+  { name: 'Favoritos', href: '/favorites', icon: Heart },
+  { name: 'Historico', href: '/history', icon: History },
+  { name: 'Preferencias', href: '/preferences', icon: Settings },
+  { name: 'Estatisticas', href: '/statistics', icon: BarChart3 },
 ];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  // TODO: Obter usuário real do Convex
-  const user = {
-    name: 'Usuário Demo',
-    email: 'demo@voyager.com',
-    avatar: null,
+  const { logout } = useAuth();
+  const { user, isLoading } = useUser();
+
+  // Dados do usuario
+  const displayName = user?.fullName || user?.email?.split('@')[0] || 'Usuario';
+  const displayEmail = user?.email || '';
+  const initial = displayName.charAt(0).toUpperCase();
+
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -104,13 +108,13 @@ export default function DashboardLayout({
                 className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors"
               >
                 <div className="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-medium">
-                  {user.name.charAt(0).toUpperCase()}
+                  {isLoading ? '...' : initial}
                 </div>
                 <div className="flex-1 text-left">
                   <p className="text-sm font-medium text-slate-900 truncate">
-                    {user.name}
+                    {isLoading ? 'Carregando...' : displayName}
                   </p>
-                  <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                  <p className="text-xs text-slate-500 truncate">{displayEmail}</p>
                 </div>
                 <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
               </button>
@@ -118,17 +122,15 @@ export default function DashboardLayout({
               {userMenuOpen && (
                 <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden">
                   <Link
-                    href="/dashboard/profile"
+                    href="/preferences"
                     className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                    onClick={() => setUserMenuOpen(false)}
                   >
                     <User className="h-4 w-4" />
                     Meu Perfil
                   </Link>
                   <button
-                    onClick={() => {
-                      // TODO: Logout via Convex
-                      window.location.href = '/login';
-                    }}
+                    onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50"
                   >
                     <LogOut className="h-4 w-4" />
@@ -156,10 +158,10 @@ export default function DashboardLayout({
 
           <div className="flex items-center gap-4">
             {/* Notification bell */}
-            <button className="relative p-2 text-slate-400 hover:text-slate-600">
+            <Link href="/alerts" className="relative p-2 text-slate-400 hover:text-slate-600">
               <Bell className="h-5 w-5" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-            </button>
+            </Link>
           </div>
         </header>
 
@@ -167,5 +169,17 @@ export default function DashboardLayout({
         <main className="p-4 lg:p-8">{children}</main>
       </div>
     </div>
+  );
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AuthGuard requireAuth={true}>
+      <DashboardContent>{children}</DashboardContent>
+    </AuthGuard>
   );
 }

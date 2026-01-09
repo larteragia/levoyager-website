@@ -198,3 +198,99 @@ export const deactivate = mutation({
     return { success: true };
   },
 });
+
+// Criar multiplas promocoes (batch - para integracao com Voyager)
+export const createMany = mutation({
+  args: {
+    promotions: v.array(
+      v.object({
+        origin: v.string(),
+        destination: v.string(),
+        airline: v.string(),
+        departureDate: v.optional(v.string()),
+        returnDate: v.optional(v.string()),
+        priceTotal: v.number(),
+        pricePerPerson: v.optional(v.number()),
+        originalPrice: v.optional(v.number()),
+        discountPercentage: v.number(),
+        currency: v.string(),
+        isRoundTrip: v.boolean(),
+        source: v.string(),
+        sourceUrl: v.string(),
+        title: v.string(),
+        description: v.optional(v.string()),
+        imageUrl: v.optional(v.string()),
+        expiresAt: v.optional(v.number()),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const createdIds: string[] = [];
+
+    for (const promo of args.promotions) {
+      // Verificar se promocao similar ja existe (deduplicacao)
+      const existing = await ctx.db
+        .query("promotions")
+        .withIndex("by_active", (q) => q.eq("isActive", true))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("origin"), promo.origin),
+            q.eq(q.field("destination"), promo.destination),
+            q.eq(q.field("sourceUrl"), promo.sourceUrl)
+          )
+        )
+        .first();
+
+      if (existing) {
+        // Atualizar preco se mudou
+        if (existing.priceTotal !== promo.priceTotal) {
+          await ctx.db.patch(existing._id, {
+            priceTotal: promo.priceTotal,
+            discountPercentage: promo.discountPercentage,
+            updatedAt: now,
+          });
+        }
+        continue;
+      }
+
+      // Criar nova promocao
+      const id = await ctx.db.insert("promotions", {
+        ...promo,
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      createdIds.push(id);
+    }
+
+    return {
+      created: createdIds.length,
+      updated: args.promotions.length - createdIds.length,
+      ids: createdIds,
+    };
+  },
+});
+
+// Buscar promocoes para notificacao (descontos altos)
+export const getHighDiscountPromotions = query({
+  args: {
+    minDiscount: v.optional(v.number()),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const minDiscount = args.minDiscount ?? 40;
+    const limit = args.limit ?? 10;
+
+    const promotions = await ctx.db
+      .query("promotions")
+      .withIndex("by_active", (q) => q.eq("isActive", true))
+      .collect();
+
+    return promotions
+      .filter((p) => p.discountPercentage >= minDiscount)
+      .sort((a, b) => b.discountPercentage - a.discountPercentage)
+      .slice(0, limit);
+  },
+});

@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Loader2, Check } from 'lucide-react';
+import { useAuth } from '../../hooks';
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const { register, isLoading, error, clearError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [localError, setLocalError] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -23,7 +22,7 @@ export default function RegisterPage() {
     const { password } = formData;
     if (password.length === 0) return { score: 0, label: '' };
     if (password.length < 6) return { score: 1, label: 'Fraca' };
-    if (password.length < 8) return { score: 2, label: 'Razoável' };
+    if (password.length < 8) return { score: 2, label: 'Razoavel' };
     if (password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)) {
       return { score: 4, label: 'Forte' };
     }
@@ -35,53 +34,48 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setLocalError('');
+    clearError();
 
     if (formData.password !== formData.confirmPassword) {
-      setError('As senhas não coincidem.');
+      setLocalError('As senhas nao coincidem.');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres.');
+      setLocalError('A senha deve ter pelo menos 6 caracteres.');
       return;
     }
 
     if (!formData.acceptTerms) {
-      setError('Você deve aceitar os termos de uso.');
+      setLocalError('Voce deve aceitar os termos de uso.');
       return;
     }
 
-    setIsLoading(true);
+    const result = await register(formData.email, formData.password, formData.name);
 
-    try {
-      // TODO: Integrar com Convex auth
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Redirecionar para página de sucesso ou dashboard
-      router.push('/dashboard');
-    } catch (err) {
-      setError('Erro ao criar conta. Tente novamente.');
-    } finally {
-      setIsLoading(false);
+    if (!result.success && result.error) {
+      setLocalError(result.error);
     }
   };
+
+  const displayError = localError || error;
 
   return (
     <div className="space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Crie sua conta grátis
+          Crie sua conta gratis
         </h1>
         <p className="text-slate-600">
-          Comece a receber alertas de promoções agora mesmo
+          Comece a receber alertas de promocoes agora mesmo
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
+        {displayError && (
           <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-            {error}
+            {displayError}
           </div>
         )}
 
@@ -99,6 +93,7 @@ export default function RegisterPage() {
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
               required
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -117,6 +112,7 @@ export default function RegisterPage() {
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
               required
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -130,11 +126,12 @@ export default function RegisterPage() {
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Minimo 6 caracteres"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="w-full pl-10 pr-12 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
               required
+              disabled={isLoading}
             />
             <button
               type="button"
@@ -157,7 +154,7 @@ export default function RegisterPage() {
                 ))}
               </div>
               <p className="text-xs text-slate-500">
-                Força da senha: <span className="font-medium">{strength.label}</span>
+                Forca da senha: <span className="font-medium">{strength.label}</span>
               </p>
             </div>
           )}
@@ -177,6 +174,7 @@ export default function RegisterPage() {
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
               className="w-full pl-10 pr-12 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
               required
+              disabled={isLoading}
             />
             {formData.confirmPassword && formData.password === formData.confirmPassword && (
               <Check className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-green-500" />
@@ -191,6 +189,7 @@ export default function RegisterPage() {
             checked={formData.acceptTerms}
             onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
             className="mt-1 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+            disabled={isLoading}
           />
           <label htmlFor="terms" className="text-sm text-slate-600">
             Eu aceito os{' '}
@@ -199,7 +198,7 @@ export default function RegisterPage() {
             </Link>{' '}
             e a{' '}
             <Link href="/privacidade" className="text-sky-600 hover:text-sky-700 font-medium">
-              Política de Privacidade
+              Politica de Privacidade
             </Link>
           </label>
         </div>
@@ -216,7 +215,7 @@ export default function RegisterPage() {
             </>
           ) : (
             <>
-              Criar conta grátis
+              Criar conta gratis
               <ArrowRight className="h-5 w-5" />
             </>
           )}
@@ -225,11 +224,11 @@ export default function RegisterPage() {
 
       <div className="space-y-4">
         <div className="bg-slate-100 rounded-lg p-4">
-          <h3 className="font-medium text-slate-900 mb-2">O que você ganha:</h3>
+          <h3 className="font-medium text-slate-900 mb-2">O que voce ganha:</h3>
           <ul className="space-y-2 text-sm text-slate-600">
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-500" />
-              Alertas ilimitados de promoções
+              Alertas ilimitados de promocoes
             </li>
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-500" />
@@ -237,18 +236,18 @@ export default function RegisterPage() {
             </li>
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-500" />
-              Notificações por Telegram, Email e WhatsApp
+              Notificacoes por Telegram, Email e WhatsApp
             </li>
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-500" />
-              Histórico completo de promoções
+              Historico completo de promocoes
             </li>
           </ul>
         </div>
       </div>
 
       <p className="text-center text-sm text-slate-600">
-        Já tem uma conta?{' '}
+        Ja tem uma conta?{' '}
         <Link href="/login" className="text-sky-600 hover:text-sky-700 font-medium">
           Fazer login
         </Link>
