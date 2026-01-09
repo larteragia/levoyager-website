@@ -1,0 +1,6 @@
+.next
+node_modules
+.git
+__tests__
+coverage
+*.log

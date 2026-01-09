@@ -3,11 +3,7 @@ import type { NextRequest } from 'next/server';
 
 // Rotas que requerem autenticacao
 const protectedRoutes = [
-  '/alerts',
-  '/favorites',
-  '/history',
-  '/preferences',
-  '/statistics',
+  '/dashboard',
 ];
 
 // Rotas de autenticacao (redirect se ja logado)
@@ -40,12 +36,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Rotas protegidas
-    '/alerts/:path*',
-    '/favorites/:path*',
-    '/history/:path*',
-    '/preferences/:path*',
-    '/statistics/:path*',
+    // Rotas protegidas (dashboard e subrotas)
+    '/dashboard/:path*',
     // Rotas de auth
     '/login',
     '/register',
