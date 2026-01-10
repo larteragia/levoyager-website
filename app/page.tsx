@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Plane, Bell, TrendingUp, Shield, Zap, Users } from 'lucide-react';
 import { ThemeToggle } from './components/ThemeToggle';
+import { HeroAuthButtons, CTAAuthButton } from './components/AuthButtons';
 
 export default function HomePage() {
   return (
@@ -41,20 +42,7 @@ export default function HomePage() {
             Configure suas preferências e economize muito dinheiro.
           </p>
 
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/register"
-              className="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              Começar Agora - É Grátis
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex h-12 items-center justify-center rounded-lg border border-input bg-background px-8 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              Já tenho conta
-            </Link>
-          </div>
+          <HeroAuthButtons />
 
           <div className="flex items-center space-x-8 text-sm text-muted-foreground">
             <div className="flex items-center space-x-2">
@@ -148,12 +136,7 @@ export default function HomePage() {
           <p className="text-lg opacity-90 mb-8">
             Cadastre-se agora e receba sua primeira promoção em até 24 horas.
           </p>
-          <Link
-            href="/register"
-            className="inline-flex h-12 items-center justify-center rounded-lg bg-background px-8 text-sm font-medium text-foreground transition-colors hover:bg-background/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            Criar Minha Conta Grátis
-          </Link>
+          <CTAAuthButton />
         </div>
       </section>
 

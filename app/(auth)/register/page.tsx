@@ -64,10 +64,10 @@ export default function RegisterPage() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Crie sua conta gratis
         </h1>
-        <p className="text-slate-600">
+        <p className="text-muted-foreground">
           Comece a receber alertas de promocoes agora mesmo
         </p>
       </div>
@@ -80,18 +80,18 @@ export default function RegisterPage() {
         )}
 
         <div className="space-y-2">
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="name" className="block text-sm font-medium text-foreground">
             Nome completo
           </label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               id="name"
               type="text"
               placeholder="Seu nome"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
               required
               disabled={isLoading}
             />
@@ -99,18 +99,18 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="email" className="block text-sm font-medium text-foreground">
             Email
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               id="email"
               type="email"
               placeholder="seu@email.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
               required
               disabled={isLoading}
             />
@@ -118,25 +118,25 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="password" className="block text-sm font-medium text-foreground">
             Senha
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
               placeholder="Minimo 6 caracteres"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full pl-10 pr-12 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-12 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
               required
               disabled={isLoading}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
@@ -153,7 +153,7 @@ export default function RegisterPage() {
                   />
                 ))}
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Forca da senha: <span className="font-medium">{strength.label}</span>
               </p>
             </div>
@@ -161,18 +161,18 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
             Confirmar senha
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <input
               id="confirmPassword"
               type={showPassword ? 'text' : 'password'}
               placeholder="Digite a senha novamente"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              className="w-full pl-10 pr-12 py-3 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full pl-10 pr-12 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
               required
               disabled={isLoading}
             />
@@ -188,16 +188,16 @@ export default function RegisterPage() {
             type="checkbox"
             checked={formData.acceptTerms}
             onChange={(e) => setFormData({ ...formData, acceptTerms: e.target.checked })}
-            className="mt-1 h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+            className="mt-1 h-4 w-4 rounded border-input text-primary focus:ring-ring"
             disabled={isLoading}
           />
-          <label htmlFor="terms" className="text-sm text-slate-600">
+          <label htmlFor="terms" className="text-sm text-muted-foreground">
             Eu aceito os{' '}
-            <Link href="/termos" className="text-sky-600 hover:text-sky-700 font-medium">
+            <Link href="/termos" className="text-primary hover:text-primary/80 font-medium">
               Termos de Uso
             </Link>{' '}
             e a{' '}
-            <Link href="/privacidade" className="text-sky-600 hover:text-sky-700 font-medium">
+            <Link href="/privacidade" className="text-primary hover:text-primary/80 font-medium">
               Politica de Privacidade
             </Link>
           </label>
@@ -206,7 +206,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-sky-600 text-white font-medium hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-primary text-white font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? (
             <>
@@ -223,9 +223,9 @@ export default function RegisterPage() {
       </form>
 
       <div className="space-y-4">
-        <div className="bg-slate-100 rounded-lg p-4">
-          <h3 className="font-medium text-slate-900 mb-2">O que voce ganha:</h3>
-          <ul className="space-y-2 text-sm text-slate-600">
+        <div className="bg-muted rounded-lg p-4">
+          <h3 className="font-medium text-foreground mb-2">O que voce ganha:</h3>
+          <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-500" />
               Alertas ilimitados de promocoes
@@ -246,9 +246,9 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      <p className="text-center text-sm text-slate-600">
+      <p className="text-center text-sm text-muted-foreground">
         Ja tem uma conta?{' '}
-        <Link href="/login" className="text-sky-600 hover:text-sky-700 font-medium">
+        <Link href="/login" className="text-primary hover:text-primary/80 font-medium">
           Fazer login
         </Link>
       </p>

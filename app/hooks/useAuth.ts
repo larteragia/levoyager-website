@@ -50,8 +50,20 @@ export function useAuth() {
         });
 
         setAuth(newToken, newUserId);
-        router.push('/');
-        return { success: true };
+
+        // Enviar email de boas-vindas (nao bloqueia o fluxo)
+        fetch('/api/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: email,
+            template: 'welcome',
+            data: { name: fullName }
+          })
+        }).catch(err => console.error('Erro ao enviar email de boas-vindas:', err));
+
+        router.push('/register/success');
+        return { success: true, userId: newUserId };
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Erro ao criar conta';
         setError(message);
@@ -77,7 +89,7 @@ export function useAuth() {
         });
 
         setAuth(newToken, newUserId);
-        router.push('/');
+        router.push('/dashboard');
         return { success: true };
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Credenciais inválidas';
@@ -116,6 +128,22 @@ export function useAuth() {
 
       try {
         const result = await forgotPasswordMutation({ email });
+
+        // Em producao, envia email de recuperacao
+        // O resetToken so e retornado em dev, em prod seria gerado no backend
+        if (result.resetToken) {
+          const resetUrl = `${window.location.origin}/reset-password?token=${result.resetToken}`;
+          fetch('/api/email/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: email,
+              template: 'passwordReset',
+              data: { resetUrl }
+            })
+          }).catch(err => console.error('Erro ao enviar email de recuperacao:', err));
+        }
+
         return { success: true, message: result.message };
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Erro ao enviar email';

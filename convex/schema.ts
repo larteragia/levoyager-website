@@ -11,11 +11,14 @@ export default defineSchema({
     telegramChatId: v.optional(v.string()),
     isActive: v.boolean(),
     isEmailVerified: v.boolean(),
+    emailVerificationToken: v.optional(v.string()),
+    emailVerificationExpires: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_email", ["email"])
-    .index("by_telegram", ["telegramChatId"]),
+    .index("by_telegram", ["telegramChatId"])
+    .index("by_verification_token", ["emailVerificationToken"]),
 
   // Preferências do usuário
   userPreferences: defineTable({

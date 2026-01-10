@@ -20,12 +20,19 @@ export const register = mutation({
     }
 
     const now = Date.now();
+
+    // Gerar token de verificacao de email
+    const emailVerificationToken = crypto.randomUUID();
+    const emailVerificationExpires = now + 24 * 60 * 60 * 1000; // 24 horas
+
     const userId = await ctx.db.insert("users", {
       email: args.email,
       passwordHash: args.passwordHash,
       fullName: args.fullName,
       isActive: true,
       isEmailVerified: false,
+      emailVerificationToken,
+      emailVerificationExpires,
       createdAt: now,
       updatedAt: now,
     });
@@ -333,6 +340,92 @@ export const getUserWithPreferences = query({
         isEmailVerified: user.isEmailVerified,
       },
       preferences: preferences || null,
+    };
+  },
+});
+
+// Verificar email com token
+export const verifyEmail = mutation({
+  args: {
+    token: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_verification_token", (q) => q.eq("emailVerificationToken", args.token))
+      .first();
+
+    if (!user) {
+      throw new Error("Token inválido");
+    }
+
+    if (user.emailVerificationExpires && user.emailVerificationExpires < Date.now()) {
+      throw new Error("Token expirado");
+    }
+
+    await ctx.db.patch(user._id, {
+      isEmailVerified: true,
+      emailVerificationToken: undefined,
+      emailVerificationExpires: undefined,
+      updatedAt: Date.now(),
+    });
+
+    return { success: true, email: user.email };
+  },
+});
+
+// Reenviar email de verificacao
+export const resendVerificationEmail = mutation({
+  args: {
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    if (user.isEmailVerified) {
+      throw new Error("Email já verificado");
+    }
+
+    const now = Date.now();
+    const emailVerificationToken = crypto.randomUUID();
+    const emailVerificationExpires = now + 24 * 60 * 60 * 1000; // 24 horas
+
+    await ctx.db.patch(args.userId, {
+      emailVerificationToken,
+      emailVerificationExpires,
+      updatedAt: now,
+    });
+
+    return {
+      success: true,
+      token: emailVerificationToken,
+      email: user.email,
+      name: user.fullName,
+    };
+  },
+});
+
+// Obter token de verificacao do usuario (para envio de email)
+export const getVerificationToken = query({
+  args: {
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      token: user.emailVerificationToken,
+      email: user.email,
+      name: user.fullName,
+      isVerified: user.isEmailVerified,
     };
   },
 });

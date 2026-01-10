@@ -55,7 +55,7 @@ export default function AuthLayout({
       </div>
 
       {/* Lado direito - Formulário */}
-      <div className="flex items-center justify-center p-8 bg-slate-50">
+      <div className="flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md">
           {/* Logo mobile */}
           <div className="lg:hidden mb-8 text-center">
