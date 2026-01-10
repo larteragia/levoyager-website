@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET /api/voyager/promotions - Buscar promocoes do Voyager Python
+// GET /api/voyager/promotions - Buscar promocoes do LeVoyager Python
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const maxPrice = searchParams.get('maxPrice');
     const limit = searchParams.get('limit') || '20';
 
-    // URL da API Voyager Python
+    // URL da API LeVoyager Python
     const voyagerApiUrl = process.env.VOYAGER_API_URL || 'http://localhost:5000';
 
     // Construir query params
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
       source: 'mock', // Em producao seria 'voyager'
     });
   } catch (error) {
-    console.error('[Voyager Promotions] Error:', error);
+    console.error('[LeVoyager Promotions] Error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch promotions' },
       { status: 500 }

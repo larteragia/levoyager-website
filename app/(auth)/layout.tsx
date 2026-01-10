@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plane } from 'lucide-react';
+import Image from 'next/image';
 
 export default function AuthLayout({
   children,
@@ -12,10 +12,13 @@ export default function AuthLayout({
       <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-800 p-12 text-white">
         <div>
           <Link href="/" className="flex items-center gap-3">
-            <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm">
-              <Plane className="h-8 w-8" />
-            </div>
-            <span className="text-2xl font-bold">Voyager</span>
+            <Image
+              src="/logo.png"
+              alt="LeVoyager"
+              width={200}
+              height={50}
+              className="brightness-0 invert"
+            />
           </Link>
         </div>
 
@@ -56,11 +59,13 @@ export default function AuthLayout({
         <div className="w-full max-w-md">
           {/* Logo mobile */}
           <div className="lg:hidden mb-8 text-center">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <div className="p-2 bg-sky-600 rounded-xl">
-                <Plane className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-slate-900">Voyager</span>
+            <Link href="/" className="inline-flex items-center justify-center">
+              <Image
+                src="/logo.png"
+                alt="LeVoyager"
+                width={180}
+                height={45}
+              />
             </Link>
           </div>
 

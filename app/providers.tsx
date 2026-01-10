@@ -1,6 +1,7 @@
 'use client';
 
 import { ConvexProvider, ConvexReactClient } from 'convex/react';
+import { ThemeProvider } from 'next-themes';
 import { ReactNode, useState, useEffect, createContext, useContext } from 'react';
 
 // Criar cliente Convex
@@ -91,13 +92,20 @@ function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Provider principal que combina Convex + Auth
+// Provider principal que combina Convex + Auth + Theme
 export function Providers({ children }: { children: ReactNode }) {
   const [convex] = useState(() => new ConvexReactClient(convexUrl));
 
   return (
-    <ConvexProvider client={convex}>
-      <AuthProvider>{children}</AuthProvider>
-    </ConvexProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      disableTransitionOnChange
+    >
+      <ConvexProvider client={convex}>
+        <AuthProvider>{children}</AuthProvider>
+      </ConvexProvider>
+    </ThemeProvider>
   );
 }

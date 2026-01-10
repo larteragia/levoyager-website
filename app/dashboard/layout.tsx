@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
-  Plane,
   Bell,
   History,
   Settings,
@@ -18,15 +18,16 @@ import {
   Home,
 } from 'lucide-react';
 import { AuthGuard } from '../components/AuthGuard';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { useAuth, useUser } from '../hooks';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: Home },
-  { name: 'Alertas', href: '/alerts', icon: Bell },
-  { name: 'Favoritos', href: '/favorites', icon: Heart },
-  { name: 'Historico', href: '/history', icon: History },
-  { name: 'Preferencias', href: '/preferences', icon: Settings },
-  { name: 'Estatisticas', href: '/statistics', icon: BarChart3 },
+  { name: 'Dashboard', href: '/dashboard', icon: Home },
+  { name: 'Alertas', href: '/dashboard/alerts', icon: Bell },
+  { name: 'Favoritos', href: '/dashboard/favorites', icon: Heart },
+  { name: 'Histórico', href: '/dashboard/history', icon: History },
+  { name: 'Preferências', href: '/dashboard/preferences', icon: Settings },
+  { name: 'Estatísticas', href: '/dashboard/statistics', icon: BarChart3 },
 ];
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
@@ -47,7 +48,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-background">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -58,22 +59,24 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-slate-200">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="p-2 bg-sky-600 rounded-xl">
-                <Plane className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-slate-900">Voyager</span>
+          <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/logo.png"
+                alt="LeVoyager"
+                width={140}
+                height={35}
+              />
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1 text-slate-400 hover:text-slate-600"
+              className="lg:hidden p-1 text-muted-foreground hover:text-foreground"
             >
               <X className="h-5 w-5" />
             </button>
@@ -89,11 +92,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-sky-50 text-sky-700'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
                 >
-                  <item.icon className={`h-5 w-5 ${isActive ? 'text-sky-600' : ''}`} />
+                  <item.icon className={`h-5 w-5 ${isActive ? 'text-primary' : ''}`} />
                   {item.name}
                 </Link>
               );
@@ -101,29 +104,29 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           </nav>
 
           {/* User section */}
-          <div className="p-4 border-t border-slate-200">
+          <div className="p-4 border-t border-border">
             <div className="relative">
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors"
               >
-                <div className="w-9 h-9 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-medium">
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
                   {isLoading ? '...' : initial}
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-medium text-slate-900 truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {isLoading ? 'Carregando...' : displayName}
                   </p>
-                  <p className="text-xs text-slate-500 truncate">{displayEmail}</p>
+                  <p className="text-xs text-muted-foreground truncate">{displayEmail}</p>
                 </div>
-                <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {userMenuOpen && (
-                <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden">
+                <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover rounded-lg shadow-lg border border-border overflow-hidden">
                   <Link
                     href="/preferences"
-                    className="flex items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                    className="flex items-center gap-3 px-4 py-3 text-sm text-popover-foreground hover:bg-accent"
                     onClick={() => setUserMenuOpen(false)}
                   >
                     <User className="h-4 w-4" />
@@ -131,7 +134,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-destructive hover:bg-destructive/10"
                   >
                     <LogOut className="h-4 w-4" />
                     Sair
@@ -146,10 +149,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 bg-white border-b border-slate-200 lg:px-8">
+        <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 bg-card border-b border-border lg:px-8">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden p-2 text-slate-400 hover:text-slate-600"
+            className="lg:hidden p-2 text-muted-foreground hover:text-foreground"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -157,8 +160,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
           <div className="flex-1 lg:hidden" />
 
           <div className="flex items-center gap-4">
+            {/* Theme toggle */}
+            <ThemeToggle />
             {/* Notification bell */}
-            <Link href="/alerts" className="relative p-2 text-slate-400 hover:text-slate-600">
+            <Link href="/dashboard/alerts" className="relative p-2 text-muted-foreground hover:text-foreground">
               <Bell className="h-5 w-5" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
             </Link>

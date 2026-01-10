@@ -8,17 +8,18 @@ import {
 describe('Format Utils', () => {
   describe('formatCurrency', () => {
     it('should format BRL currency correctly', () => {
-      expect(formatCurrency(1000)).toBe('R$ 1.000,00');
-      expect(formatCurrency(1500.5)).toBe('R$ 1.500,50');
-      expect(formatCurrency(0)).toBe('R$ 0,00');
+      // Note: Intl.NumberFormat uses non-breaking space (U+00A0) between currency symbol and value
+      expect(formatCurrency(1000)).toBe('R$\u00A01.000,00');
+      expect(formatCurrency(1500.5)).toBe('R$\u00A01.500,50');
+      expect(formatCurrency(0)).toBe('R$\u00A00,00');
     });
 
     it('should format USD currency correctly', () => {
-      expect(formatCurrency(1000, 'USD')).toBe('US$ 1.000,00');
+      expect(formatCurrency(1000, 'USD')).toBe('US$\u00A01.000,00');
     });
 
     it('should handle decimal values', () => {
-      expect(formatCurrency(2999.99)).toBe('R$ 2.999,99');
+      expect(formatCurrency(2999.99)).toBe('R$\u00A02.999,99');
     });
   });
 

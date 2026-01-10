@@ -148,7 +148,7 @@ export default function ForgotPasswordPage() {
 
       <div className="bg-sky-50 rounded-lg p-4 border border-sky-100">
         <p className="text-sm text-sky-800">
-          <strong>Dica:</strong> Use o mesmo email que voce usou para se cadastrar no Voyager.
+          <strong>Dica:</strong> Use o mesmo email que voce usou para se cadastrar no LeVoyager.
         </p>
       </div>
 

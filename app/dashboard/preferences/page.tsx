@@ -421,7 +421,7 @@ export default function PreferencesPage() {
               className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
             />
             <p className="mt-2 text-xs text-slate-500">
-              Inicie uma conversa com @VoyagerBot e use /start para obter seu Chat ID
+              Inicie uma conversa com @LeVoyagerBot e use /start para obter seu Chat ID
             </p>
           </div>
         )}

@@ -28,14 +28,16 @@ export const listActive = query({
     }
 
     // Filtrar por preço máximo
-    if (args.maxPrice) {
-      promotions = promotions.filter((p) => p.priceTotal <= args.maxPrice);
+    if (args.maxPrice !== undefined) {
+      const maxPrice = args.maxPrice;
+      promotions = promotions.filter((p) => p.priceTotal <= maxPrice);
     }
 
     // Filtrar por desconto mínimo
-    if (args.minDiscount) {
+    if (args.minDiscount !== undefined) {
+      const minDiscount = args.minDiscount;
       promotions = promotions.filter(
-        (p) => p.discountPercentage >= args.minDiscount
+        (p) => p.discountPercentage >= minDiscount
       );
     }
 
@@ -199,7 +201,7 @@ export const deactivate = mutation({
   },
 });
 
-// Criar multiplas promocoes (batch - para integracao com Voyager)
+// Criar multiplas promocoes (batch - para integracao com LeVoyager)
 export const createMany = mutation({
   args: {
     promotions: v.array(

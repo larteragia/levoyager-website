@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Chave de API para autenticar requisicoes do Voyager
+// Chave de API para autenticar requisicoes do LeVoyager
 const VOYAGER_API_KEY = process.env.VOYAGER_API_KEY;
 
 interface PromotionPayload {
@@ -23,7 +23,7 @@ interface PromotionPayload {
   expiresAt?: number;
 }
 
-// POST /api/voyager/sync - Receber promocoes do sistema Voyager Python
+// POST /api/voyager/sync - Receber promocoes do sistema LeVoyager Python
 export async function POST(request: NextRequest) {
   try {
     // Verificar autenticacao
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     // Aqui em producao, enviariamos para o Convex via HTTP action
     // Por enquanto, apenas logamos e retornamos sucesso
-    console.log(`[Voyager Sync] Received ${validPromotions.length} valid promotions`);
+    console.log(`[LeVoyager Sync] Received ${validPromotions.length} valid promotions`);
 
     // Em producao, chamariamos o Convex:
     // const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       message: `Synced ${validPromotions.length} promotions successfully`,
     });
   } catch (error) {
-    console.error('[Voyager Sync] Error:', error);
+    console.error('[LeVoyager Sync] Error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

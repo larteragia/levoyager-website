@@ -6,12 +6,12 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Voyager Assinaturas - Encontre as Melhores Promoções de Passagens Aéreas',
+  title: 'LeVoyager - Encontre as Melhores Promoções de Passagens Aéreas',
   description: 'Receba alertas em tempo real das melhores promoções de passagens aéreas. Cadastre-se gratuitamente e configure suas preferências personalizadas.',
   keywords: 'passagens aéreas, promoções, voos baratos, descontos, viagens, turismo, viajar, avião, passagens promocionais, ofertas especiais',
-  authors: [{ name: 'Voyager' }],
-  creator: 'Voyager',
-  publisher: 'Voyager',
+  authors: [{ name: 'LeVoyager' }],
+  creator: 'LeVoyager',
+  publisher: 'LeVoyager',
   formatDetection: {
     email: false,
     address: false,
@@ -22,25 +22,25 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    title: 'Voyager Assinaturas',
+    title: 'LeVoyager',
     description: 'Encontre as melhores promoções de passagens aéreas',
-    siteName: 'Voyager',
+    siteName: 'LeVoyager',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Voyager Assinaturas',
+        alt: 'LeVoyager',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Voyager Assinaturas',
+    title: 'LeVoyager',
     description: 'Encontre as melhores promoções de passagens aéreas',
-    images: ['/og-image.jpg'],
-    creator: '@voyagerbr',
-    site: '@voyagerbr',
+    images: ['/symbol.png'],
+    creator: '@levoyager',
+    site: '@levoyager',
   },
   robots: {
     index: true,
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/symbol.png',
+    shortcut: '/symbol.png',
+    apple: '/symbol.png',
   },
   manifest: '/site.webmanifest',
 };
@@ -71,6 +71,9 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content={process.env.NEXT_PUBLIC_APP_THEME_COLOR || '#F1F5F9'} />
         <link rel="canonical" href={process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'} />
+        <link rel="icon" href="/symbol.png" sizes="any" />
+        <link rel="shortcut icon" href="/symbol.png" />
+        <link rel="apple-touch-icon" href="/symbol.png" />
       </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>

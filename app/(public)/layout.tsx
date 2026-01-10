@@ -1,15 +1,16 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Plane, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuthContext } from '../providers';
 
 const navigation = [
-  { name: 'Inicio', href: '/' },
+  { name: 'Início', href: '/' },
   { name: 'Companhias', href: '/airlines' },
-  { name: 'Precos', href: '/prices' },
+  { name: 'Preços', href: '/prices' },
   { name: 'Dicas', href: '/tips' },
 ];
 
@@ -29,11 +30,13 @@ export default function PublicLayout({
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="p-2 bg-sky-600 rounded-xl">
-                <Plane className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-slate-900">Voyager</span>
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/logo.png"
+                alt="LeVoyager"
+                width={150}
+                height={38}
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -57,7 +60,7 @@ export default function PublicLayout({
             <div className="hidden md:flex items-center gap-4">
               {isAuthenticated ? (
                 <Link
-                  href="/"
+                  href="/dashboard"
                   className="px-4 py-2 rounded-lg bg-sky-600 text-white font-medium hover:bg-sky-700 transition-colors"
                 >
                   Meu Dashboard
@@ -114,7 +117,7 @@ export default function PublicLayout({
                 <div className="pt-4 border-t border-slate-200 flex flex-col gap-3">
                   {isAuthenticated ? (
                     <Link
-                      href="/"
+                      href="/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
                       className="w-full text-center px-4 py-2 rounded-lg bg-sky-600 text-white font-medium"
                     >
@@ -154,24 +157,25 @@ export default function PublicLayout({
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Brand */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-sky-600 rounded-xl">
-                  <Plane className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-lg font-bold">Voyager</span>
-              </div>
+              <Image
+                src="/logo.png"
+                alt="LeVoyager"
+                width={140}
+                height={35}
+                className="brightness-0 invert"
+              />
               <p className="text-slate-400 text-sm">
-                Encontre as melhores promocoes de passagens aereas e economize em suas viagens.
+                Encontre as melhores promoções de passagens aéreas e economize em suas viagens.
               </p>
             </div>
 
             {/* Links */}
             <div>
-              <h3 className="font-semibold mb-4">Navegacao</h3>
+              <h3 className="font-semibold mb-4">Navegação</h3>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li>
                   <Link href="/" className="hover:text-white">
-                    Inicio
+                    Início
                   </Link>
                 </li>
                 <li>
@@ -181,7 +185,7 @@ export default function PublicLayout({
                 </li>
                 <li>
                   <Link href="/prices" className="hover:text-white">
-                    Precos
+                    Preços
                   </Link>
                 </li>
                 <li>
@@ -216,7 +220,7 @@ export default function PublicLayout({
                 <li>contato@levoyager.com.br</li>
                 <li>
                   <a
-                    href="https://t.me/voyagerbr"
+                    href="https://t.me/levoyager"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-white"
@@ -229,7 +233,7 @@ export default function PublicLayout({
           </div>
 
           <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-400">
-            <p>&copy; {new Date().getFullYear()} Voyager. Todos os direitos reservados.</p>
+            <p>&copy; {new Date().getFullYear()} LeVoyager. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

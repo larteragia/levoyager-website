@@ -1,12 +1,32 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Plane, Bell, TrendingUp, Shield, Zap, Users } from 'lucide-react';
+import { ThemeToggle } from './components/ThemeToggle';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
+      {/* Header */}
+      <header className="container px-4 py-4">
+        <div className="flex items-center justify-end">
+          <ThemeToggle />
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="container px-4 py-20 md:py-32">
+      <section className="container px-4 py-16 md:py-28">
         <div className="flex flex-col items-center text-center space-y-8 animate-fade-in">
+          {/* Logo */}
+          <div className="mb-4">
+            <Image
+              src="/logo.png"
+              alt="LeVoyager"
+              width={280}
+              height={70}
+              priority
+            />
+          </div>
+
           <div className="inline-flex items-center space-x-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
             <Zap className="h-4 w-4" />
             <span>Alertas em Tempo Real</span>
@@ -84,7 +104,7 @@ export default function HomePage() {
           <FeatureCard
             icon={<Users className="h-6 w-6" />}
             title="Comunidade Ativa"
-            description="Junte-se a milhares de viajantes economizando com o Voyager."
+            description="Junte-se a milhares de viajantes economizando com o LeVoyager."
           />
         </div>
       </section>
@@ -141,7 +161,7 @@ export default function HomePage() {
       <footer className="container px-4 py-12 border-t">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Voyager. Todos os direitos reservados.
+            © {new Date().getFullYear()} LeVoyager. Todos os direitos reservados.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <Link href="/privacidade" className="hover:text-foreground transition-colors">

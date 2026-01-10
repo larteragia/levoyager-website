@@ -111,7 +111,7 @@ const tips = [
     id: 15,
     category: 'melhores-epocas',
     title: 'Fique de olho em promocoes',
-    content: 'Companhias lancam promocoes em datas especificas como Black Friday, aniversarios e promocoes relampago. O Voyager te avisa!',
+    content: 'Companhias lancam promocoes em datas especificas como Black Friday, aniversarios e promocoes relampago. O LeVoyager te avisa!',
   },
   {
     id: 16,
@@ -241,7 +241,7 @@ export default function TipsPage() {
       {/* CTA */}
       <div className="mt-16 text-center bg-sky-50 rounded-2xl p-8">
         <h2 className="text-2xl font-bold text-slate-900 mb-4">
-          Economize ainda mais com o Voyager
+          Economize ainda mais com o LeVoyager
         </h2>
         <p className="text-slate-600 mb-6 max-w-lg mx-auto">
           Alem das dicas, nosso sistema monitora promocoes 24/7 e te avisa quando encontrar as melhores ofertas.

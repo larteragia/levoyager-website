@@ -104,7 +104,7 @@ export default function AirlinesPage() {
           Companhias Aereas
         </h1>
         <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-          Conheca as principais companhias aereas monitoradas pelo Voyager e suas rotas mais populares.
+          Conheca as principais companhias aereas monitoradas pelo LeVoyager e suas rotas mais populares.
         </p>
       </div>
 

@@ -1,42 +1,57 @@
 /* eslint-disable */
 /**
- * Generated API types - will be replaced by `npx convex dev`
- * This is a temporary stub file for TypeScript compilation
+ * Generated `api` utility.
+ *
+ * THIS CODE IS AUTOMATICALLY GENERATED.
+ *
+ * To regenerate, run `npx convex dev`.
+ * @module
  */
 
-import type { FunctionReference } from "convex/server";
+import type * as alerts from "../alerts.js";
+import type * as auth from "../auth.js";
+import type * as favorites from "../favorites.js";
+import type * as preferences from "../preferences.js";
+import type * as promotions from "../promotions.js";
 
-export declare const api: {
-  auth: {
-    register: FunctionReference<"mutation", "public">;
-    login: FunctionReference<"mutation", "public">;
-    logout: FunctionReference<"mutation", "public">;
-    getUserByToken: FunctionReference<"query", "public">;
-    updateProfile: FunctionReference<"mutation", "public">;
-    changePassword: FunctionReference<"mutation", "public">;
-    forgotPassword: FunctionReference<"mutation", "public">;
-    resetPassword: FunctionReference<"mutation", "public">;
-    validateSession: FunctionReference<"query", "public">;
-    getUserWithPreferences: FunctionReference<"query", "public">;
-  };
-  alerts: {
-    getUserAlerts: FunctionReference<"query", "public">;
-    markAsRead: FunctionReference<"mutation", "public">;
-    getUnreadCount: FunctionReference<"query", "public">;
-  };
-  favorites: {
-    getUserFavorites: FunctionReference<"query", "public">;
-    addFavorite: FunctionReference<"mutation", "public">;
-    removeFavorite: FunctionReference<"mutation", "public">;
-    isFavorite: FunctionReference<"query", "public">;
-  };
-  preferences: {
-    getUserPreferences: FunctionReference<"query", "public">;
-    updatePreferences: FunctionReference<"mutation", "public">;
-  };
-  promotions: {
-    getActivePromotions: FunctionReference<"query", "public">;
-    getPromotionById: FunctionReference<"query", "public">;
-    searchPromotions: FunctionReference<"query", "public">;
-  };
-};
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
+
+declare const fullApi: ApiFromModules<{
+  alerts: typeof alerts;
+  auth: typeof auth;
+  favorites: typeof favorites;
+  preferences: typeof preferences;
+  promotions: typeof promotions;
+}>;
+
+/**
+ * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
+export declare const api: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
+
+/**
+ * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
+ */
+export declare const internal: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
+
+export declare const components: {};

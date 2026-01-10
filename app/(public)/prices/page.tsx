@@ -115,7 +115,7 @@ export default function PricesPage() {
           Precos por Rota
         </h1>
         <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-          Compare precos das principais rotas monitoradas pelo Voyager e veja as tendencias.
+          Compare precos das principais rotas monitoradas pelo LeVoyager e veja as tendencias.
         </p>
       </div>
 
