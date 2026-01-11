@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import Mailjet from 'node-mailjet';
 
-// Lazy initialization do Resend para evitar erro em build
-let resend: Resend | null = null;
+// Lazy initialization do Mailjet para evitar erro em build
+let mailjet: Mailjet | null = null;
 
-function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) {
+function getMailjet(): Mailjet | null {
+  if (!process.env.MAILJET_API_KEY || !process.env.MAILJET_SECRET_KEY) {
     return null;
   }
-  if (!resend) {
-    resend = new Resend(process.env.RESEND_API_KEY);
+  if (!mailjet) {
+    mailjet = new Mailjet({
+      apiKey: process.env.MAILJET_API_KEY,
+      apiSecret: process.env.MAILJET_SECRET_KEY,
+    });
   }
-  return resend;
+  return mailjet;
 }
 
-const EMAIL_FROM = process.env.EMAIL_FROM || 'LeVoyager <noreply@levoyager.com.br>';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@levoyager.com.br';
+const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || 'LeVoyager';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://levoyager.com.br';
 
 // Templates de email
@@ -36,8 +40,8 @@ const templates = {
         <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px 40px 30px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">LeVoyager</h1>
+            <td style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); padding: 40px 40px 30px; text-align: center;">
+              <img src="${SITE_URL}/logo.png" alt="LeVoyager" style="max-width: 200px; height: auto; margin-bottom: 10px;" />
               <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Alertas de Promocoes de Passagens Aereas</p>
             </td>
           </tr>
@@ -112,8 +116,8 @@ const templates = {
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
           <tr>
-            <td style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px;">LeVoyager</h1>
+            <td style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); padding: 40px; text-align: center;">
+              <img src="${SITE_URL}/logo.png" alt="LeVoyager" style="max-width: 200px; height: auto;" />
             </td>
           </tr>
           <tr>
@@ -169,8 +173,8 @@ const templates = {
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
           <tr>
-            <td style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px; text-align: center;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px;">LeVoyager</h1>
+            <td style="background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); padding: 40px; text-align: center;">
+              <img src="${SITE_URL}/logo.png" alt="LeVoyager" style="max-width: 200px; height: auto;" />
             </td>
           </tr>
           <tr>
@@ -222,11 +226,11 @@ interface SendEmailRequest {
 
 export async function POST(request: NextRequest) {
   try {
-    const resendClient = getResend();
+    const mailjetClient = getMailjet();
 
-    // Verificar se Resend esta configurado
-    if (!resendClient) {
-      console.warn('[Email] RESEND_API_KEY not configured, skipping email');
+    // Verificar se Mailjet esta configurado
+    if (!mailjetClient) {
+      console.warn('[Email] Mailjet not configured, skipping email');
       return NextResponse.json({
         success: true,
         message: 'Email skipped (not configured)',
@@ -253,18 +257,31 @@ export async function POST(request: NextRequest) {
 
     const emailContent = templates[template](data as never);
 
-    const result = await resendClient.emails.send({
-      from: EMAIL_FROM,
-      to,
-      subject: emailContent.subject,
-      html: emailContent.html,
-    });
+    const result = await mailjetClient
+      .post('send', { version: 'v3.1' })
+      .request({
+        Messages: [
+          {
+            From: {
+              Email: EMAIL_FROM,
+              Name: EMAIL_FROM_NAME,
+            },
+            To: [
+              {
+                Email: to,
+              },
+            ],
+            Subject: emailContent.subject,
+            HTMLPart: emailContent.html,
+          },
+        ],
+      });
 
-    console.log(`[Email] Sent ${template} to ${to}`, result);
+    console.log(`[Email] Sent ${template} to ${to}`, result.body);
 
     return NextResponse.json({
       success: true,
-      messageId: result.data?.id,
+      messageId: (result.body as { Messages?: Array<{ MessageID?: string }> })?.Messages?.[0]?.MessageID,
     });
   } catch (error) {
     console.error('[Email] Error sending email:', error);
